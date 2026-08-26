@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 
     portno = 1200;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
     if (sockfd < 0)
     {
         perror("socket");
@@ -45,7 +46,6 @@ int main(int argc, char *argv[])
 
     numbers[0] = number1;
     numbers[1] = number2;
-
     n = write(sockfd, numbers, sizeof(numbers));
     if (n < 0)
     {
