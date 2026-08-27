@@ -9,7 +9,7 @@
 int main(int argc, char *argv[])
 {
 	int sockfd, newsockfd, portno, clilen, n;
-	char buffer[256];
+	char buffer[1024];
 	struct sockaddr_in serv_addr, cli_addr;
 	
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -24,7 +24,24 @@ int main(int argc, char *argv[])
 	clilen = sizeof(cli_addr);
    	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
 	//the senario
-	
+	printf("Charger Server is ON. . . .\n");
+    int id = 0;
+    read(newsockfd,&id,sizeof(id));
+    int charge = 0;
+    //printf("Mobile %d: \n",id);
+    while (charge <=100){
+
+        printf("Mobile %d: %3d%% \n",id, charge);
+        fflush(stdout);
+        //printf("testing 2 ... \n");
+        sleep(1);
+        charge += 20;
+    }
+    //printf("testing 3 ... \n");
+    printf("Mobile %d: Fully charged! \n",id);
+    bzero(buffer, 1024);
+    strcpy(buffer, "Mobile Fully charged! \n");
+    write(newsockfd,&buffer,sizeof(buffer));
 	close(newsockfd);
 	
 	close(sockfd);

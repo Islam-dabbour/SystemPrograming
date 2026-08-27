@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 { int sockfd, portno, n;
    struct sockaddr_in serv_addr;
   // struct hostent *server;
-   char buffer[256];
+   char buffer[1024];
    portno = 1200;
    sockfd = socket(AF_INET, SOCK_STREAM, 0); 
    //server = gethostbyname(argv[1]);
@@ -25,8 +25,14 @@ int main(int argc, char *argv[])
  connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr));
   //senario
 
+    printf("Enter Mobile ID: ");
+    int id = 0;
+    scanf("%d",&id);
 
+    write(sockfd,&id,sizeof(id));
 
+    read(sockfd,&buffer, sizeof(buffer));
+    printf("%s",buffer);
 
- close(sockfd);
+    close(sockfd);
    }
