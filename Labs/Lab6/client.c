@@ -4,14 +4,49 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <pthread.h>
 
 void error(const char *msg){
 perror(msg); 
 exit(0); 
 }
 
+void *client_guess(void *arg){
+
+  printf("[+]Connected to the server from client side.\n");
+
+  bzero(buffer, 1024);
+  strcpy(buffer, "HELLO, THIS IS CLIENT.");
+  write(sockFD,buffer,strlen(buffer));
+  bzero(buffer, 1024);
+  read(sockFD,buffer,sizeof(buffer));
+  printf("From Server: %s\n", buffer);
+
+  while(1){
+    // bzero(buffer, 1024);
+    // read(sockFD, buffer, sizeof(buffer));
+    // printf("From Server: %s\n", buffer);
+    
+
+    int guess;
+    printf("Enter your guess: ");
+    scanf("%d", &guess);
+    char sendbuf[32];
+    snprintf(sendbuf, sizeof(sendbuf), "%d", guess);
+    write(sockFD, sendbuf, strlen(sendbuf) + 1);
+
+   bzero(buffer, 1024);
+   read(sockFD,buffer,sizeof(buffer));
+   printf("From Server: %s\n", buffer);
+
+  }
+
+  
+}
+
 int main(int argc, char **argv){
 
+  pthread_t thread_id;
   // char *ip = "127.0.0.1"; // this is used if you need to connect to a specific IP which should be passed to inet_addr(ip) 
    if(argc != 2){
     printf("You need to provide a port number in the program argument\n");
@@ -45,37 +80,13 @@ memset(&addr, '\0', sizeof(addr));//fill the struct addr with null using memory 
   addr.sin_port = htons(port);
   addr.sin_addr.s_addr =INADDR_ANY;// inet_addr(ip);
 //bcopy((char *)server->h_addr,(char *)&addr.sin_addr.s_addr,server->h_length);  //This is used if you need to connect to a specific hostname
-  
+while(1){}
 if(connect(sockFD, (struct sockaddr*)&addr, sizeof(addr)) < 0) 
   error("ERROR connecting from client side");
   
-  printf("[+]Connected to the server from client side.\n");
 
-  bzero(buffer, 1024);
-  strcpy(buffer, "HELLO, THIS IS CLIENT.");
-  write(sockFD,buffer,strlen(buffer));
-  bzero(buffer, 1024);
-  read(sockFD,buffer,sizeof(buffer));
-  printf("From Server: %s\n", buffer);
-
-  while(1){
-    // bzero(buffer, 1024);
-    // read(sockFD, buffer, sizeof(buffer));
-    // printf("From Server: %s\n", buffer);
-    
-
-    int guess;
-    printf("Enter your guess: ");
-    scanf("%d", &guess);
-    char sendbuf[32];
-    snprintf(sendbuf, sizeof(sendbuf), "%d", guess);
-    write(sockFD, sendbuf, strlen(sendbuf) + 1);
-
-   bzero(buffer, 1024);
-   read(sockFD,buffer,sizeof(buffer));
-   printf("From Server: %s\n", buffer);
-
-  }
+  
+}
   
 
   close(sockFD);
