@@ -21,9 +21,29 @@ int main(int argc, char *argv[])
 	
 	bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
 	listen(sockfd,5);
+    printf("The Server is running ...\n");
 	clilen = sizeof(cli_addr);
    	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
 	//the senario
+    printf("The two numbers from the client are: ");
+    float num1,num2;
+    read(newsockfd,&num1,sizeof(num1));
+    read(newsockfd,&num2,sizeof(num2));
+
+    printf("%f %f\n",num1,num2);
+
+    // multipication 
+    float mult = num1 * num2;
+
+    // sum 
+
+    float sum = num1 + num2;
+
+    printf("the oeprations finished sending to the client ... \n");
+
+    write(newsockfd,&mult,sizeof(mult));
+    write(newsockfd,&sum,sizeof(sum));
+
 
 	close(newsockfd);
 	
